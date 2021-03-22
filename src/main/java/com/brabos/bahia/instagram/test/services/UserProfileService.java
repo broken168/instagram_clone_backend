@@ -4,7 +4,9 @@ import com.brabos.bahia.instagram.test.domains.UserProfile;
 import com.brabos.bahia.instagram.test.repositories.UserProfileRepository;
 import com.brabos.bahia.instagram.test.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -28,5 +30,10 @@ public class UserProfileService {
             throw new ObjectNotFoundException("Nenhum usuário cadastrado");
         }
         return userProfiles;
+    }
+
+    public Page<UserProfile> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return userProfileRepository.findAll(pageRequest);
     }
 }
