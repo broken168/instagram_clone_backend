@@ -1,11 +1,16 @@
 package com.brabos.bahia.instagram.test.resources;
 
 import com.brabos.bahia.instagram.test.domains.UserProfile;
+import com.brabos.bahia.instagram.test.dto.NewUserProfileDTO;
 import com.brabos.bahia.instagram.test.services.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
 
 
 @RestController
@@ -16,8 +21,8 @@ public class UserProfileResource {
     private UserProfileService userProfileService;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> find(@PathVariable("id") Long id){
-        return ResponseEntity.ok().body(userProfileService.find(id));
+    public ResponseEntity<?> findById(@PathVariable("id") Long id){
+        return ResponseEntity.ok().body(userProfileService.findById(id));
     }
 
     @GetMapping
@@ -33,5 +38,14 @@ public class UserProfileResource {
     {
         Page<UserProfile> list = userProfileService.findPage(page, linesPerPage, orderBy, direction);
         return ResponseEntity.ok().body(list);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> newUser(@RequestBody NewUserProfileDTO newUserProfileDTO){
+        UserProfile user = userProfileService.fromDTO(newUserProfileDTO);
+        user = userProfileService.insert(user);
+        URI uri  = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(user.getId()).toUri();
+        return ResponseEntity.created(uri).build();
     }
 }
