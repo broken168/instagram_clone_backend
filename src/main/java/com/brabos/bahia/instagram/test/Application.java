@@ -20,6 +20,7 @@ public class Application implements CommandLineRunner {
 	@Autowired
 	private UserProfileRepository userProfileRepository;
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
@@ -27,8 +28,9 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		UserProfile up1 = new UserProfile(null, "gabriel@gmail.com", "gabriel", "kkk", null, 0L, 0L, 0L);
-		UserProfile up2 = new UserProfile(null, "india@gmail.com", "india", "kkk", null, 0L, 0L, 0L);
+		UserProfile up1 = new UserProfile(null, "gabriel@gmail.com", "gabriel", ("123"), "jk");
+		UserProfile up2 = new UserProfile(null, "india@gmail.com", "india", ("123"), "k");
+		up1.getFollowers().add(1L);
 
 		Post p1 = new Post(null, "descrição kkk", null, up1);
 		Post p2 = new Post(null, "descrição 2", null, up1);

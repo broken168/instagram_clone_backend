@@ -1,5 +1,9 @@
 package com.brabos.bahia.instagram.test.dto;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 public class NewUserProfileDTO implements Serializable {
@@ -7,8 +11,17 @@ public class NewUserProfileDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+
+    @Email(message = "O email informado é inválido")
+    @NotEmpty(message = "Campo obrigatório")
     private String email;
+
+    @NotEmpty(message = "Campo obrigatório")
+    @Length(min = 4, max = 16, message = "O seu nome deve ter entre 4 e 16 caracteres")
     private String username;
+
+    @NotEmpty(message = "Campo obrigatório")
+    @Length(min = 8, message = "O sua senha deve ter no mínimo 8 caracteres")
     private String password;
 
     public NewUserProfileDTO() {

@@ -1,5 +1,9 @@
 package com.brabos.bahia.instagram.test.dto;
 
+import org.hibernate.validator.constraints.URL;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class NewPostDTO implements Serializable {
@@ -7,8 +11,15 @@ public class NewPostDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+
+    @NotEmpty(message = "Campo obrigatório")
     private String description;
+
+    @URL(message = "URL inválida")
+    @NotEmpty(message = "Campo obrigatório")
     private String imageUrl;
+
+    @NotNull(message = "É preciso informar um id de usuário")
     private Long userProfileId;
 
     public NewPostDTO() {

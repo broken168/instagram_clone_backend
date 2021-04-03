@@ -25,6 +25,11 @@ public class UserProfileResource {
         return ResponseEntity.ok().body(userProfileService.findById(id));
     }
 
+    @GetMapping(value = "/newFollow/{id}")
+    public ResponseEntity<Void> newFollow(@PathVariable("id") Long id){
+        return null;
+    }
+
     @GetMapping
     public ResponseEntity<?> findAll(){
         return ResponseEntity.ok().body(userProfileService.findAll());
@@ -41,7 +46,7 @@ public class UserProfileResource {
     }
 
     @PostMapping
-    public ResponseEntity<Void> newUser(@RequestBody NewUserProfileDTO newUserProfileDTO){
+    public ResponseEntity<Void> newUser(@Valid @RequestBody NewUserProfileDTO newUserProfileDTO){
         UserProfile user = userProfileService.fromDTO(newUserProfileDTO);
         user = userProfileService.insert(user);
         URI uri  = ServletUriComponentsBuilder.fromCurrentRequest()

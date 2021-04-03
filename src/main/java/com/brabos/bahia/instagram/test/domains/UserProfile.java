@@ -1,10 +1,13 @@
 package com.brabos.bahia.instagram.test.domains;
 
+
+import com.brabos.bahia.instagram.test.domains.enums.Profile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class UserProfile implements Serializable {
@@ -14,31 +17,60 @@ public class UserProfile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String email;
     private String username;
     private String password;
     private String url_image;
-    private Long seguidores;
-    private Long seguindo;
-    private Long postagens;
 
     @OneToMany(mappedBy = "userProfile")
     private List<Post> posts = new ArrayList<>();
 
+    @ElementCollection
+    @CollectionTable(name = "FOLLOWERS")
+    private Set<Long> followers = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "profiles")
+    private Set<Integer> profiles = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "FOLLOWING")
+    private Set<Long> following = new HashSet<>();
+
     public UserProfile() {
     }
 
-    public UserProfile(Long id, String email, String username, String password, String url_image, Long seguidores, Long seguindo, Long postagens) {
+    public UserProfile(Long id, String email, String username, String password, String url_image) {
+        addProfiles(Profile.CLIENT);
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
         this.url_image = url_image;
-        this.seguidores = seguidores;
-        this.seguindo = seguindo;
-        this.postagens = postagens;
+    }
 
+    public Set<Profile> getProfiles() {
+        return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
+    }
+
+    public void addProfiles(Profile profile) {
+        this.profiles.add(profile.getCode());
+    }
+
+    public Set<Long> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Set<Long> following) {
+        this.following = following;
+    }
+
+    public Set<Long> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<Long> followers) {
+        this.followers = followers;
     }
 
     public Long getId() {
@@ -65,6 +97,7 @@ public class UserProfile implements Serializable {
         this.username = username;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -81,30 +114,7 @@ public class UserProfile implements Serializable {
         this.url_image = url_image;
     }
 
-    public Long getSeguidores() {
-        return seguidores;
-    }
-
-    public void setSeguidores(Long seguidores) {
-        this.seguidores = seguidores;
-    }
-
-    public Long getSeguindo() {
-        return seguindo;
-    }
-
-    public void setSeguindo(Long seguindo) {
-        this.seguindo = seguindo;
-    }
-
-    public Long getPostagens() {
-        return postagens;
-    }
-
-    public void setPostagens(Long postagens) {
-        this.postagens = postagens;
-    }
-
+    @JsonIgnore
     public List<Post> getPosts() {
         return posts;
     }

@@ -26,6 +26,7 @@ public class UserProfileService {
         return userProfile.orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado para o id: " + id));
     }
 
+
     public List<UserProfile> findAll(){
         List<UserProfile> userProfiles = repository.findAll();
         if(userProfiles.size() == 0){
@@ -40,7 +41,7 @@ public class UserProfileService {
     }
 
     public UserProfile fromDTO(NewUserProfileDTO user) {
-        return new UserProfile(null, user.getEmail(), user.getUsername(), user.getPassword(), null, 0L, 0L, 0L);
+        return new UserProfile(null, user.getEmail(), user.getUsername(), user.getPassword(), null);
     }
 
     @Transactional
