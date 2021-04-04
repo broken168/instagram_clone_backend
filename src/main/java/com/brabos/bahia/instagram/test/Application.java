@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
 
@@ -20,6 +21,9 @@ public class Application implements CommandLineRunner {
 	@Autowired
 	private UserProfileRepository userProfileRepository;
 
+	@Autowired
+	private BCryptPasswordEncoder pe;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -28,8 +32,8 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		UserProfile up1 = new UserProfile(null, "gabriel@gmail.com", "gabriel", ("123"), "jk");
-		UserProfile up2 = new UserProfile(null, "india@gmail.com", "india", ("123"), "k");
+		UserProfile up1 = new UserProfile(null, "gabriel@gmail.com", "gabriel", pe.encode("123"), "jk");
+		UserProfile up2 = new UserProfile(null, "india@gmail.com", "india", pe.encode("123"), "k");
 		up1.getFollowers().add(1L);
 
 		Post p1 = new Post(null, "descrição kkk", null, up1);

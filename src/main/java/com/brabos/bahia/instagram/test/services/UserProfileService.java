@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -20,6 +21,9 @@ public class UserProfileService {
 
     @Autowired
     private UserProfileRepository repository;
+
+    @Autowired
+    private BCryptPasswordEncoder pe;
 
     public UserProfile findById(Long id){
         Optional<UserProfile> userProfile = repository.findById(id);
@@ -41,7 +45,7 @@ public class UserProfileService {
     }
 
     public UserProfile fromDTO(NewUserProfileDTO user) {
-        return new UserProfile(null, user.getEmail(), user.getUsername(), user.getPassword(), null);
+        return new UserProfile(null, user.getEmail(), user.getUsername(), pe.encode(user.getPassword()), null);
     }
 
     @Transactional
