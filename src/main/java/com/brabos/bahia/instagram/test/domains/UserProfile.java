@@ -29,13 +29,13 @@ public class UserProfile implements Serializable {
     @CollectionTable(name = "FOLLOWERS")
     private Set<Long> followers = new HashSet<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "profiles")
-    private Set<Integer> profiles = new HashSet<>();
-
     @ElementCollection
     @CollectionTable(name = "FOLLOWING")
     private Set<Long> following = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "profiles")
+    private Set<Integer> profiles = new HashSet<>();
 
     public UserProfile() {
     }
@@ -49,6 +49,7 @@ public class UserProfile implements Serializable {
         this.url_image = url_image;
     }
 
+    @JsonIgnore
     public Set<Profile> getProfiles() {
         return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
     }
@@ -81,6 +82,7 @@ public class UserProfile implements Serializable {
         this.id = id;
     }
 
+    @JsonIgnore
     public String getEmail() {
         return email;
     }
