@@ -27,7 +27,7 @@ public class UserProfile implements Serializable {
 
     @ElementCollection
     @CollectionTable(name = "FOLLOWERS")
-    private Set<Long> followers = new HashSet<>();
+    private Set<UserProfile> followers = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "FOLLOWING")
@@ -38,6 +38,7 @@ public class UserProfile implements Serializable {
     private Set<Integer> profiles = new HashSet<>();
 
     public UserProfile() {
+        addProfiles(Profile.CLIENT);
     }
 
     public UserProfile(Long id, String email, String username, String password, String url_image) {
@@ -66,11 +67,21 @@ public class UserProfile implements Serializable {
         this.following = following;
     }
 
+    //return the id of each user
     public Set<Long> getFollowers() {
-        return followers;
+        Set<Long> list = new HashSet<>();
+        for(UserProfile x : followers){
+            list.add(x.getId());
+        }
+        return list;
     }
 
-    public void setFollowers(Set<Long> followers) {
+    //adds a new follower to follower list
+    public void addFollowers(UserProfile userProfile){
+        followers.add(userProfile);
+    }
+
+    public void setFollowers(Set<UserProfile> followers) {
         this.followers = followers;
     }
 
