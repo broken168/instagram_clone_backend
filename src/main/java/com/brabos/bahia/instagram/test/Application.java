@@ -35,11 +35,9 @@ public class Application implements CommandLineRunner {
 
 		UserProfile up1 = new UserProfile(null, "gabriel@gmail.com", "gabriel", pe.encode("123"), "jk");
 		UserProfile up2 = new UserProfile(null, "india@gmail.com", "india", pe.encode("123"), "k");
-		up1.addFollowers(up2);
 
 		up1.getProfiles().add(Profile.ADMIN);
 
-		up2.addFollowers(up1);
 
 		Post p1 = new Post(null, "descrição kkk", null, up1);
 		Post p2 = new Post(null, "descrição 2", null, up1);

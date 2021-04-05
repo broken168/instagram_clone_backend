@@ -31,7 +31,7 @@ public class UserProfile implements Serializable {
 
     @ElementCollection
     @CollectionTable(name = "FOLLOWING")
-    private Set<Long> following = new HashSet<>();
+    private Set<UserProfile> following = new HashSet<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "profiles")
@@ -60,10 +60,18 @@ public class UserProfile implements Serializable {
     }
 
     public Set<Long> getFollowing() {
-        return following;
+        Set<Long> list = new HashSet<>();
+        for(UserProfile x : following){
+            list.add(x.getId());
+        }
+        return list;
     }
 
-    public void setFollowing(Set<Long> following) {
+    public void addFollowging(UserProfile userProfile){
+        following.add(userProfile);
+    }
+
+    public void setFollowing(Set<UserProfile> following) {
         this.following = following;
     }
 
