@@ -1,6 +1,7 @@
 package com.brabos.bahia.instagram.test.resources.exceptions;
 
 import com.brabos.bahia.instagram.test.services.exceptions.AuthorizationException;
+import com.brabos.bahia.instagram.test.services.exceptions.BadObjectFormation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException | BadObjectFormation e) {
             resolver.resolveException(request, response, null, e);
         }
     }

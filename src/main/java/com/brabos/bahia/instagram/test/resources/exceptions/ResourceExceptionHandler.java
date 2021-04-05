@@ -1,5 +1,6 @@
 package com.brabos.bahia.instagram.test.resources.exceptions;
 
+import com.brabos.bahia.instagram.test.services.exceptions.BadObjectFormation;
 import com.brabos.bahia.instagram.test.services.exceptions.ObjectNotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,12 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> parameters(MissingServletRequestParameterException e, HttpServletRequest request){
         StandardError standardError = new StandardError(new Date(), "Parametros requeridos: "
                 + e.getParameterName(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+    }
+
+    @ExceptionHandler(BadObjectFormation.class)
+    public ResponseEntity<StandardError> badObjectFormation(BadObjectFormation e, HttpServletRequest request){
+        StandardError standardError = new StandardError(new Date(), "Campos ááá com nomes inválidos", "Campo: " + e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
 }
