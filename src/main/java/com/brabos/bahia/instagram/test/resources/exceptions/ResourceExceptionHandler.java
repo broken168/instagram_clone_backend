@@ -1,5 +1,6 @@
 package com.brabos.bahia.instagram.test.resources.exceptions;
 
+import com.brabos.bahia.instagram.test.services.exceptions.AuthorizationException;
 import com.brabos.bahia.instagram.test.services.exceptions.BadObjectFormation;
 import com.brabos.bahia.instagram.test.services.exceptions.ObjectNotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -53,6 +54,12 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(BadObjectFormation.class)
     public ResponseEntity<StandardError> badObjectFormation(BadObjectFormation e, HttpServletRequest request){
         StandardError standardError = new StandardError(new Date(), "Campos ááá com nomes inválidos", "Campo: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request){
+        StandardError standardError = new StandardError(new Date(), "Não autorizado", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
 }

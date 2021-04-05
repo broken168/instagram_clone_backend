@@ -1,5 +1,8 @@
 package com.brabos.bahia.instagram.test.security;
 
+import com.brabos.bahia.instagram.test.services.exceptions.AuthorizationException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,5 +25,35 @@ public class JWTUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
                 .compact();
+    }
+
+    public boolean tokenIsValid(String token) {
+        Claims claims = getClaims(token);
+        if(claims != null){
+            String username = claims.getSubject();
+            Date expirationDate = claims.getExpiration();
+            Date now = new Date(System.currentTimeMillis());
+            if(username != null && expirationDate != null && now.before(expirationDate)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Claims getClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(secretKey.getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
+        }catch (ExpiredJwtException e){
+            throw new AuthorizationException("Sessão expirada");
+        }
+
+    }
+
+    //use after using the method tokenIsValid
+    public String getUsername(String token) {
+        return getClaims(token).getSubject();
     }
 }

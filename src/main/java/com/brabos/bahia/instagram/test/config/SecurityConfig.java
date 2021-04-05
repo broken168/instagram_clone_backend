@@ -3,6 +3,7 @@ package com.brabos.bahia.instagram.test.config;
 import com.brabos.bahia.instagram.test.resources.exceptions.ExceptionHandlerFilter;
 import com.brabos.bahia.instagram.test.resources.exceptions.ResourceExceptionHandler;
 import com.brabos.bahia.instagram.test.security.JWTAuthenticationFilter;
+import com.brabos.bahia.instagram.test.security.JWTAuthorizationFilter;
 import com.brabos.bahia.instagram.test.security.JWTUtil;
 import com.brabos.bahia.instagram.test.security.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JWTUtil jwtUtil;
 
     private static final String[] PUBLIC_MATCHERS = {
-        "/users/hello"
+
     };
 
 
@@ -53,7 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable();
         http
                 .addFilterBefore(exceptionHandlerFilter, LogoutFilter.class)
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
+
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers(PUBLIC_MATCHERS).permitAll()
                 .anyRequest().authenticated();
