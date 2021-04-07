@@ -2,10 +2,8 @@ package com.brabos.bahia.instagram.test.dto;
 
 import com.brabos.bahia.instagram.test.domains.UserProfile;
 
-import javax.swing.text.html.Option;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class UserProfileDTO implements Serializable {
@@ -27,7 +25,7 @@ public class UserProfileDTO implements Serializable {
         this.id = user.getId();
         this.email = user.getEmail();
         this.username = user.getUsername();
-        this.url_image = user.getUrl_image();
+        this.url_image = user.getImageUrl();
         this.followers = user.getFollowers();
         this.following = user.getFollowing();
     }

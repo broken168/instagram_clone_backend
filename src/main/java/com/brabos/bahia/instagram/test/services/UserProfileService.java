@@ -60,11 +60,27 @@ public class UserProfileService {
         return repository.save(user);
     }
 
+    @Transactional
     public void newFollow(Long id) {
         UserProfile userFollower = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado para o id: " + id));
         UserProfile userFollowing = findById(UserService.getAuthenticatedUser().getId());
         userFollowing.addFollowging(userFollower);
         userFollower.addFollowers(userFollowing);
         repository.saveAll(Arrays.asList(userFollower, userFollowing));
+    }
+
+    public UserProfile getCurrentUser() {
+        return repository.findById(UserService.getAuthenticatedUser().getId())
+                .orElseThrow(() -> new ObjectNotFoundException("Não há usuário logado"));
+
+    }
+
+    @Transactional
+    public UserProfile userUpdate(UserProfile user) {
+        UserProfile currentUser = getCurrentUser();
+        if( !(user.getId().equals(currentUser.getId())) ) throw new AuthorizationException("Você só pode atualizar o seu próprio perfil");
+        currentUser.setImageUrl(user.getImageUrl());
+        currentUser.setUsername(user.getUsername());
+        return repository.save(currentUser);
     }
 }

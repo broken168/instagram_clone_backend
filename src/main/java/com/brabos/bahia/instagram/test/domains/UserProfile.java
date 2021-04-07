@@ -20,7 +20,8 @@ public class UserProfile implements Serializable {
     private String email;
     private String username;
     private String password;
-    private String url_image;
+    private String imageUrl;
+    private Long postsNumber;
 
     @OneToMany(mappedBy = "userProfile")
     private List<Post> posts = new ArrayList<>();
@@ -41,13 +42,13 @@ public class UserProfile implements Serializable {
         addProfiles(Profile.CLIENT);
     }
 
-    public UserProfile(Long id, String email, String username, String password, String url_image) {
+    public UserProfile(Long id, String email, String username, String password, String imageUrl) {
         addProfiles(Profile.CLIENT);
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.url_image = url_image;
+        this.imageUrl = imageUrl;
     }
 
     @JsonIgnore
@@ -101,7 +102,6 @@ public class UserProfile implements Serializable {
         this.id = id;
     }
 
-    @JsonIgnore
     public String getEmail() {
         return email;
     }
@@ -127,12 +127,12 @@ public class UserProfile implements Serializable {
         this.password = password;
     }
 
-    public String getUrl_image() {
-        return url_image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setUrl_image(String url_image) {
-        this.url_image = url_image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @JsonIgnore
@@ -142,6 +142,14 @@ public class UserProfile implements Serializable {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public Long getPostsNumber() {
+        return postsNumber;
+    }
+
+    public void setPostsNumber(Long postsNumber) {
+        this.postsNumber = postsNumber;
     }
 
     @Override

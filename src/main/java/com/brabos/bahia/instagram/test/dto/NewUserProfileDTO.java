@@ -10,7 +10,6 @@ public class NewUserProfileDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
 
     @Email(message = "O email informado é inválido")
     @NotEmpty(message = "Campo obrigatório")
@@ -28,19 +27,10 @@ public class NewUserProfileDTO implements Serializable {
 
     }
 
-    public NewUserProfileDTO(Long id, String email, String username, String password) {
-        this.id = id;
+    public NewUserProfileDTO(String email, String username, String password) {
         this.email = email;
         this.username = username;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getEmail() {
