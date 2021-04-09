@@ -40,8 +40,7 @@ public class PostServices {
     }
 
     public Post fromDTO(NewPostDTO newPostDTO) {
-        UserProfile userProfile = userProfileService.findById(newPostDTO.getUserProfileId());
-        return new Post(null, newPostDTO.getDescription(), newPostDTO.getImageUrl(), userProfile);
+        return new Post(null, newPostDTO.getDescription(), newPostDTO.getImageUrl(), newPostDTO.getUserProfile());
     }
 
 

@@ -33,6 +33,7 @@ public class Post implements Serializable {
         this.userProfile = userProfile;
     }
 
+
     public Long getId() {
         return id;
     }

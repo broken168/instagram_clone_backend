@@ -1,5 +1,6 @@
 package com.brabos.bahia.instagram.test.dto;
 
+import com.brabos.bahia.instagram.test.domains.UserProfile;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotEmpty;
@@ -20,10 +21,11 @@ public class NewPostDTO implements Serializable {
     private String imageUrl;
 
     @NotNull(message = "É preciso informar um id de usuário")
-    private Long userProfileId;
+    private UserProfile userProfile;
 
     public NewPostDTO() {
     }
+
 
     public Long getId() {
         return id;
@@ -49,11 +51,11 @@ public class NewPostDTO implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public Long getUserProfileId() {
-        return userProfileId;
+    public UserProfile getUserProfile() {
+        return userProfile;
     }
 
-    public void setUserProfileId(Long userProfileId) {
-        this.userProfileId = userProfileId;
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
     }
 }

@@ -3,17 +3,16 @@ package com.brabos.bahia.instagram.test.resources;
 import com.brabos.bahia.instagram.test.domains.UserProfile;
 import com.brabos.bahia.instagram.test.dto.NewUserProfileDTO;
 import com.brabos.bahia.instagram.test.dto.UserProfileDTO;
+import com.brabos.bahia.instagram.test.helper.URL;
 import com.brabos.bahia.instagram.test.security.JWTUtil;
 import com.brabos.bahia.instagram.test.security.UserSS;
 import com.brabos.bahia.instagram.test.security.UserService;
 import com.brabos.bahia.instagram.test.services.UserProfileService;
+import com.brabos.bahia.instagram.test.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URI;
@@ -30,8 +29,8 @@ public class UserProfileResource {
     private JWTUtil jwtUtil;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserProfile> findById(@PathVariable("id") Long id){
-        return ResponseEntity.ok().body(userProfileService.findById(id));
+    public ResponseEntity<UserProfileDTO> findById(@PathVariable("id") Long id){
+        return ResponseEntity.ok().body(new UserProfileDTO(userProfileService.findById(id)));
     }
 
     @PutMapping(value = "/update")
@@ -39,15 +38,43 @@ public class UserProfileResource {
         return ResponseEntity.ok().body(userProfileService.userUpdate(user));
     }
 
-    @GetMapping(value = "/new_follow/{id}")
+    @PostMapping(value = "/new_follow/{id}")
     public ResponseEntity<Void> newFollow(@PathVariable("id") Long id){
         userProfileService.newFollow(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/remove_follow/{id}")
+    public ResponseEntity<Void> removeFollow(@PathVariable("id") Long id){
+        userProfileService.removeFollow(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/current_user")
     public ResponseEntity<UserProfile> currentUser(){
         return ResponseEntity.ok().body(userProfileService.getCurrentUser());
+    }
+
+    @GetMapping(value = "/posts")
+    public ResponseEntity<?> search(@RequestParam(value = "ids") String ids,
+                                              @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                              @RequestParam(value = "linesPerPage", defaultValue = "24")Integer linesPerPage,
+                                              @RequestParam(value = "orderBy", defaultValue = "id")String orderBy,
+                                              @RequestParam(value = "direction", defaultValue = "DESC")String direction){
+        if (ids == null) {
+            throw new ObjectNotFoundException("Informe ids dos usuários para pesquisa");
+        }
+        return ResponseEntity.ok().body(userProfileService.search(URL.decodeLongList(ids), page, linesPerPage, orderBy, direction));
+    }
+
+
+    @GetMapping(value = {"/username/{username}"})
+    public ResponseEntity<Page> findByUsername(@PathVariable("username") String username,
+                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                            @RequestParam(value = "linesPerPage", defaultValue = "24")Integer linesPerPage,
+                                            @RequestParam(value = "orderBy", defaultValue = "username")String orderBy,
+                                            @RequestParam(value = "direction", defaultValue = "ASC")String direction){
+        return ResponseEntity.ok().body(userProfileService.findByUsername(username, page, linesPerPage, orderBy, direction));
     }
 
     @PostMapping(value = "/refresh_token")

@@ -27,12 +27,12 @@ public class UserProfile implements Serializable {
     private List<Post> posts = new ArrayList<>();
 
     @ElementCollection
-    @CollectionTable(name = "FOLLOWERS")
-    private Set<UserProfile> followers = new HashSet<>();
+    @CollectionTable(name = "follower")
+    private Set<Long> followers = new HashSet<>();
 
     @ElementCollection
-    @CollectionTable(name = "FOLLOWING")
-    private Set<UserProfile> following = new HashSet<>();
+    @CollectionTable(name = "following")
+    private Set<Long> following = new HashSet<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "profiles")
@@ -61,36 +61,38 @@ public class UserProfile implements Serializable {
     }
 
     public Set<Long> getFollowing() {
-        Set<Long> list = new HashSet<>();
-        for(UserProfile x : following){
-            list.add(x.getId());
-        }
-        return list;
+        return following;
     }
 
-    public void addFollowging(UserProfile userProfile){
-        following.add(userProfile);
+    public void addFollowging(Long id){
+        following.add(id);
     }
 
-    public void setFollowing(Set<UserProfile> following) {
+    public void setFollowing(Set<Long> following) {
         this.following = following;
+    }
+
+    //remove a following from following list
+    public void removeFollowing(Long id){
+        following.remove(id);
     }
 
     //return the id of each user
     public Set<Long> getFollowers() {
-        Set<Long> list = new HashSet<>();
-        for(UserProfile x : followers){
-            list.add(x.getId());
-        }
-        return list;
+        return followers;
     }
 
     //adds a new follower to follower list
-    public void addFollowers(UserProfile userProfile){
-        followers.add(userProfile);
+    public void addFollowers(Long id){
+        followers.add(id);
     }
 
-    public void setFollowers(Set<UserProfile> followers) {
+    //remove a follower from follower list
+    public void removeFollowers(Long id){
+        followers.remove(id);
+    }
+
+    public void setFollowers(Set<Long> followers) {
         this.followers = followers;
     }
 
@@ -135,7 +137,6 @@ public class UserProfile implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    @JsonIgnore
     public List<Post> getPosts() {
         return posts;
     }
