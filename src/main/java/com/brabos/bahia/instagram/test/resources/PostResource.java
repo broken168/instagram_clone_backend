@@ -1,5 +1,6 @@
 package com.brabos.bahia.instagram.test.resources;
 
+import com.brabos.bahia.instagram.test.domains.Comment;
 import com.brabos.bahia.instagram.test.domains.Post;
 import com.brabos.bahia.instagram.test.dto.NewPostDTO;
 import com.brabos.bahia.instagram.test.helper.URL;
@@ -30,7 +31,7 @@ public class PostResource {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<Page> search(@RequestParam(value = "ids") String ids,
+    public ResponseEntity<Page<Post>> search(@RequestParam(value = "ids") String ids,
                                        @RequestParam(value = "page", defaultValue = "0") Integer page,
                                        @RequestParam(value = "linesPerPage", defaultValue = "24")Integer linesPerPage,
                                        @RequestParam(value = "orderBy", defaultValue = "id")String orderBy,

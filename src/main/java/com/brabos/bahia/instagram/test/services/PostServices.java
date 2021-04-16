@@ -26,8 +26,7 @@ public class PostServices {
     private UserProfileService userProfileService;
 
     public Post findById(Long id){
-        Optional<Post> post = postRepository.findById(id);
-        return post.orElseThrow(() -> new ObjectNotFoundException("Nenhum post encontrado para esse id: " + id));
+        return postRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Nenhum post encontrado para esse id: " + id));
     }
 
     public List<Post> findAll(){

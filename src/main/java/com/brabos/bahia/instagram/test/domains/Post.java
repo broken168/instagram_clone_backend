@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,6 +20,20 @@ public class Post implements Serializable {
     private Long id;
     private String description;
     private String imageUrl;
+    private Long likes;
+
+    @ManyToMany
+    @JoinTable(name = "liked_posts", joinColumns = {
+            @JoinColumn(name = "user_id")},
+            inverseJoinColumns = {
+            @JoinColumn(name = "post_id")
+            })
+    private List<UserProfile> usersLiked;
+
+    private boolean isLiked;
+
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_profile_id")
@@ -26,13 +42,48 @@ public class Post implements Serializable {
     public Post() {
     }
 
+    public Post(UserProfile user) {
+        if (usersLiked.contains(user)) setLiked(true);
+        else setLiked(false);
+    }
+
     public Post(Long id, String description, String imageUrl, UserProfile userProfile) {
         this.id = id;
         this.description = description;
         this.imageUrl = imageUrl;
         this.userProfile = userProfile;
+
     }
 
+    @JsonIgnore
+    public List<UserProfile> getUsersLiked() {
+        return usersLiked;
+    }
+
+    public void addLike(UserProfile user){
+        likes++;
+        usersLiked.add(user);
+    }
+
+    public void setUsersLiked(List<UserProfile> usersLiked) {
+        this.usersLiked = usersLiked;
+    }
+
+    public boolean getIsLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public Long getId() {
         return id;
@@ -78,6 +129,14 @@ public class Post implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
         return Objects.equals(id, post.id);
+    }
+
+    public Long getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Long likes) {
+        this.likes = likes;
     }
 
     @Override

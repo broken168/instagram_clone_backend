@@ -26,6 +26,9 @@ public class UserProfile implements Serializable {
     @OneToMany(mappedBy = "userProfile")
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "userProfile")
+    private List<Comment> comments = new ArrayList<>();
+
     @ElementCollection
     @CollectionTable(name = "follower")
     private Set<Long> followers = new HashSet<>();
@@ -54,6 +57,15 @@ public class UserProfile implements Serializable {
     @JsonIgnore
     public Set<Profile> getProfiles() {
         return profiles.stream().map(x -> Profile.toEnum(x)).collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public void addProfiles(Profile profile) {
