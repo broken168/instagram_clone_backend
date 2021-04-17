@@ -1,11 +1,9 @@
 package com.brabos.bahia.instagram.test.resources;
 
-import com.brabos.bahia.instagram.test.domains.Comment;
 import com.brabos.bahia.instagram.test.domains.Post;
 import com.brabos.bahia.instagram.test.dto.NewPostDTO;
 import com.brabos.bahia.instagram.test.helper.URL;
 import com.brabos.bahia.instagram.test.services.PostServices;
-import com.brabos.bahia.instagram.test.services.exceptions.AuthorizationException;
 import com.brabos.bahia.instagram.test.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +13,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 
 @RestController
@@ -49,5 +46,11 @@ public class PostResource {
         URI uri  = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(post.getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @PostMapping(value = "/{id}")
+    public ResponseEntity<Void> like(@PathVariable("id") Long postId){
+        services.like(postId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,7 +1,9 @@
 package com.brabos.bahia.instagram.test.domains;
 
 
+import com.brabos.bahia.instagram.test.services.UserProfileService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 import javax.persistence.*;
@@ -21,6 +23,7 @@ public class Post implements Serializable {
     private String description;
     private String imageUrl;
     private Long likes;
+    private Boolean isLiked;
 
     @ManyToMany
     @JoinTable(name = "liked_posts", joinColumns = {
@@ -30,8 +33,6 @@ public class Post implements Serializable {
             })
     private List<UserProfile> usersLiked;
 
-    private boolean isLiked;
-
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
@@ -40,11 +41,6 @@ public class Post implements Serializable {
     private UserProfile userProfile;
 
     public Post() {
-    }
-
-    public Post(UserProfile user) {
-        if (usersLiked.contains(user)) setLiked(true);
-        else setLiked(false);
     }
 
     public Post(Long id, String description, String imageUrl, UserProfile userProfile) {
@@ -61,22 +57,29 @@ public class Post implements Serializable {
     }
 
     public void addLike(UserProfile user){
-        likes++;
         usersLiked.add(user);
+        if (likes == null) likes = 1L;
+        else likes ++;
+    }
+
+    public void removeLike(UserProfile user){
+        usersLiked.remove(user);
+        likes --;
     }
 
     public void setUsersLiked(List<UserProfile> usersLiked) {
         this.usersLiked = usersLiked;
     }
 
-    public boolean getIsLiked() {
+    public Boolean getIsLiked() {
         return isLiked;
     }
 
-    public void setLiked(boolean liked) {
+    public void setIsLiked(Boolean liked) {
         isLiked = liked;
     }
 
+    @JsonIgnore
     public List<Comment> getComments() {
         return comments;
     }
