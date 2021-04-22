@@ -33,9 +33,28 @@ public class UserProfileResource {
         return ResponseEntity.ok().body(new UserProfileDTO(userProfileService.findById(id)));
     }
 
-    @PutMapping(value = "/update")
-    public ResponseEntity<UserProfile> userUpdate(@RequestBody UserProfile user){
-        return ResponseEntity.ok().body(userProfileService.userUpdate(user));
+    @GetMapping
+    public ResponseEntity<Page> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                         @RequestParam(value = "linesPerPage", defaultValue = "24")Integer linesPerPage,
+                                         @RequestParam(value = "orderBy", defaultValue = "username")String orderBy,
+                                         @RequestParam(value = "direction", defaultValue = "ASC")String direction)
+    {
+        Page<UserProfile> list = userProfileService.findPage(page, linesPerPage, orderBy, direction);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/current_user")
+    public ResponseEntity<UserProfile> currentUser(){
+        return ResponseEntity.ok().body(userProfileService.getCurrentUser());
+    }
+
+    @GetMapping(value = {"/username/{username}"})
+    public ResponseEntity<Page> findByUsername(@PathVariable("username") String username,
+                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                            @RequestParam(value = "linesPerPage", defaultValue = "24")Integer linesPerPage,
+                                            @RequestParam(value = "orderBy", defaultValue = "username")String orderBy,
+                                            @RequestParam(value = "direction", defaultValue = "ASC")String direction){
+        return ResponseEntity.ok().body(userProfileService.findByUsername(username, page, linesPerPage, orderBy, direction));
     }
 
     @PostMapping(value = "/new_follow/{id}")
@@ -50,33 +69,6 @@ public class UserProfileResource {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/current_user")
-    public ResponseEntity<UserProfile> currentUser(){
-        return ResponseEntity.ok().body(userProfileService.getCurrentUser());
-    }
-
-    @GetMapping(value = "/posts")
-    public ResponseEntity<?> search(@RequestParam(value = "ids") String ids,
-                                              @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                              @RequestParam(value = "linesPerPage", defaultValue = "24")Integer linesPerPage,
-                                              @RequestParam(value = "orderBy", defaultValue = "id")String orderBy,
-                                              @RequestParam(value = "direction", defaultValue = "DESC")String direction){
-        if (ids == null) {
-            throw new ObjectNotFoundException("Informe ids dos usuários para pesquisa");
-        }
-        return ResponseEntity.ok().body(userProfileService.search(URL.decodeLongList(ids), page, linesPerPage, orderBy, direction));
-    }
-
-
-    @GetMapping(value = {"/username/{username}"})
-    public ResponseEntity<Page> findByUsername(@PathVariable("username") String username,
-                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                            @RequestParam(value = "linesPerPage", defaultValue = "24")Integer linesPerPage,
-                                            @RequestParam(value = "orderBy", defaultValue = "username")String orderBy,
-                                            @RequestParam(value = "direction", defaultValue = "ASC")String direction){
-        return ResponseEntity.ok().body(userProfileService.findByUsername(username, page, linesPerPage, orderBy, direction));
-    }
-
     @PostMapping(value = "/refresh_token")
     public ResponseEntity<Void> refreshToken(HttpServletResponse response){
         UserSS userSS = UserService.getAuthenticatedUser();
@@ -85,22 +77,17 @@ public class UserProfileResource {
         return ResponseEntity.noContent().build();
     }
 
-
-    @GetMapping
-    public ResponseEntity<Page> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                              @RequestParam(value = "linesPerPage", defaultValue = "24")Integer linesPerPage,
-                                              @RequestParam(value = "orderBy", defaultValue = "username")String orderBy,
-                                              @RequestParam(value = "direction", defaultValue = "ASC")String direction)
-    {
-        Page<UserProfile> list = userProfileService.findPage(page, linesPerPage, orderBy, direction);
-        return ResponseEntity.ok().body(list);
-    }
-
     @PostMapping(value = "/new_user")
     public ResponseEntity<Void> newUser(@Valid @RequestBody NewUserProfileDTO newUserProfileDTO){
         UserProfile user = userProfileService.fromDTO(newUserProfileDTO);
         user = userProfileService.insert(user);
         URI uri  = URI.create("http://189.84.65.150:8080/users/" + user.getId());
         return ResponseEntity.created(uri).build();
+    }
+
+
+    @PutMapping(value = "/update")
+    public ResponseEntity<UserProfile> userUpdate(@RequestBody UserProfile user){
+        return ResponseEntity.ok().body(userProfileService.userUpdate(user));
     }
 }

@@ -22,14 +22,19 @@ public class Post implements Serializable {
     private Long id;
     private String description;
     private String imageUrl;
-    private Long likes;
+    private Long likes = 0L;
+
+    @Transient
     private Boolean isLiked;
+
+    private String  username;
+    private String userImageUrl;
 
     @ManyToMany
     @JoinTable(name = "liked_posts", joinColumns = {
-            @JoinColumn(name = "user_id")},
+            @JoinColumn(name = "post_id")},
             inverseJoinColumns = {
-            @JoinColumn(name = "post_id")
+            @JoinColumn(name = "user_id")
             })
     private List<UserProfile> usersLiked;
 
@@ -49,6 +54,22 @@ public class Post implements Serializable {
         this.imageUrl = imageUrl;
         this.userProfile = userProfile;
 
+    }
+
+    public String getUsername() {
+        return userProfile.getUsername();
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUserImageUrl() {
+        return userProfile.getImageUrl();
+    }
+
+    public void setUserImageUrl(String userImageUrl) {
+        this.userImageUrl = userImageUrl;
     }
 
     @JsonIgnore
@@ -71,13 +92,7 @@ public class Post implements Serializable {
         this.usersLiked = usersLiked;
     }
 
-    public Boolean getIsLiked() {
-        return isLiked;
-    }
 
-    public void setIsLiked(Boolean liked) {
-        isLiked = liked;
-    }
 
     @JsonIgnore
     public List<Comment> getComments() {
@@ -124,6 +139,14 @@ public class Post implements Serializable {
 
     public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
+    }
+
+    public Boolean getLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(Boolean liked) {
+        isLiked = liked;
     }
 
     @Override

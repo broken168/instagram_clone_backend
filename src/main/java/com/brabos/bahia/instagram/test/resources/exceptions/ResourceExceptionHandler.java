@@ -62,4 +62,10 @@ public class ResourceExceptionHandler {
         StandardError standardError = new StandardError(new Date(), "Não autorizado", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<StandardError> runtime(RuntimeException e, HttpServletRequest request){
+        StandardError standardError = new StandardError(new Date(), "Erro", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(standardError);
+    }
 }

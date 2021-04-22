@@ -5,7 +5,6 @@ import com.brabos.bahia.instagram.test.dto.NewUserProfileDTO;
 
 
 import com.brabos.bahia.instagram.test.dto.UserProfileSearchByNameDTO;
-import com.brabos.bahia.instagram.test.dto.UserProfileSearchPostDTO;
 import com.brabos.bahia.instagram.test.repositories.UserProfileRepository;
 import com.brabos.bahia.instagram.test.security.UserService;
 import com.brabos.bahia.instagram.test.services.exceptions.AuthorizationException;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class UserProfileService {
@@ -34,15 +32,6 @@ public class UserProfileService {
     public UserProfile findById(Long id) {
         UserProfile userProfile = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado para o id: " + id));
         return userProfile;
-    }
-
-
-    public List<UserProfile> findAll() {
-        List<UserProfile> userProfiles = repository.findAll();
-        if (userProfiles.size() == 0) {
-            throw new ObjectNotFoundException("Nenhum usuário cadastrado");
-        }
-        return userProfiles;
     }
 
     public Page<UserProfile> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
@@ -95,10 +84,5 @@ public class UserProfileService {
     public Page<UserProfileSearchByNameDTO> findByUsername(String username, Integer page, Integer linesPerPage, String orderBy, String direction) {
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
         return repository.findByUsernameContaining(username, pageRequest).map(UserProfileSearchByNameDTO::new);
-    }
-
-    public Page<UserProfileSearchPostDTO> search(List<Long> ids, Integer page, Integer linesPerPage, String orderBy, String direction) {
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.fromString(direction), orderBy);
-        return repository.findByIdIn(ids, pageRequest).map(UserProfileSearchPostDTO::new);
     }
 }

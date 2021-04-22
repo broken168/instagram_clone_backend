@@ -16,6 +16,10 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Transactional(readOnly = true)
-    @Query("select u from Post u where u.userProfile.id in :id")
-    Page<Post> search(@Param("id") List<Long> firstname, Pageable pageable);
+    @Query("select u from Post u where u.userProfile.id in :ids")
+    Page<Post> getPostsByUsersIds(@Param("ids") List<Long> ids, Pageable pageable);
+
+    @Transactional(readOnly = true)
+    @Query("select u from Post u where u.userProfile.id = :id")
+    Page<Post> getPostsByUserId(@Param("id") Long id, Pageable pageable);
 }

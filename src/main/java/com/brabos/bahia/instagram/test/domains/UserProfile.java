@@ -21,7 +21,6 @@ public class UserProfile implements Serializable {
     private String username;
     private String password;
     private String imageUrl;
-    private Long postsNumber;
 
     @OneToMany(mappedBy = "userProfile")
     private List<Post> posts = new ArrayList<>();
@@ -155,14 +154,6 @@ public class UserProfile implements Serializable {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
-    }
-
-    public Long getPostsNumber() {
-        return postsNumber;
-    }
-
-    public void setPostsNumber(Long postsNumber) {
-        this.postsNumber = postsNumber;
     }
 
     @Override

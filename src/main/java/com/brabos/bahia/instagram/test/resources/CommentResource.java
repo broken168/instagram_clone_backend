@@ -28,11 +28,15 @@ public class CommentResource {
         return ResponseEntity.ok().body(commentService.findCommentsByPost(postId, page, linesPerPage, orderBy, direction));
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Comment> findById(@PathVariable("id") Long id){
+        return ResponseEntity.ok().body(commentService.findById(id));
+    }
+
     @PostMapping(value = "/{id}")
     public ResponseEntity<Void> addComment(@PathVariable("id") Long postId, @RequestBody NewCommentDTO newCommentDTO){
         Comment comment = commentService.addComment(postId, newCommentDTO);
-        URI uri  = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(comment.getId()).toUri();
+        URI uri  = URI.create("http://localhost:8080/comment/" + comment.getId());
         return ResponseEntity.created(uri).build();
     }
 }

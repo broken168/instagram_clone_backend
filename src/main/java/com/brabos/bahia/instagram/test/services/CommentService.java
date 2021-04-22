@@ -5,6 +5,7 @@ import com.brabos.bahia.instagram.test.domains.Post;
 import com.brabos.bahia.instagram.test.domains.UserProfile;
 import com.brabos.bahia.instagram.test.dto.NewCommentDTO;
 import com.brabos.bahia.instagram.test.repositories.CommentRepository;
+import com.brabos.bahia.instagram.test.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,5 +39,10 @@ public class CommentService {
         postServices.findById(postId);
         return commentRepository.findCommentsByPost(postId, pageRequest);
 
+    }
+
+    public Comment findById(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Nenhum post encontrado para esse id: " + id));
     }
 }
